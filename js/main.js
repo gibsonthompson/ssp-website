@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-  // Nav toggle
   const toggle = document.querySelector('.nav-toggle');
   const nav = document.querySelector('.nav');
   if (toggle && nav) {
@@ -13,17 +12,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }));
   }
 
-  // Scroll reveal
   const obs = new IntersectionObserver(entries => {
     entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }});
   }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
   document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 
-  // Contact form
   const form = document.querySelector('#quote-form');
   if (!form) return;
 
-  // Supabase client for photo uploads
   const SUPABASE_URL = 'https://szdrpdjyordvqtkuuazh.supabase.co';
   const SUPABASE_ANON = 'REPLACE_WITH_ANON_KEY';
   const sb = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON) : null;
@@ -31,7 +27,6 @@ document.addEventListener('DOMContentLoaded', () => {
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const btn = form.querySelector('button[type="submit"]');
-    const origText = btn.textContent;
     btn.textContent = 'Uploading...';
     btn.disabled = true;
 
@@ -39,7 +34,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const photoInput = form.querySelector('input[name="photos"]');
     const photoUrls = [];
 
-    // Upload photos to Supabase Storage
     if (sb && photoInput && photoInput.files.length > 0) {
       for (const file of photoInput.files) {
         try {
@@ -54,10 +48,8 @@ document.addEventListener('DOMContentLoaded', () => {
           console.error('Photo upload error:', err);
         }
       }
-      btn.textContent = 'Sending...';
-    } else {
-      btn.textContent = 'Sending...';
     }
+    btn.textContent = 'Sending...';
 
     const payload = {
       name: fd.get('name'),
@@ -75,10 +67,12 @@ document.addEventListener('DOMContentLoaded', () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
-      if (res.ok) {
+      const result = await res.json();
+      if (result.success) {
         window.location.href = 'thank-you.html';
       } else {
-        throw new Error('Failed');
+        btn.textContent = 'Try Again';
+        btn.disabled = false;
       }
     } catch (err) {
       console.error('Form error:', err);
