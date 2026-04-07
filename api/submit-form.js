@@ -67,7 +67,7 @@ export default async function handler(req, res) {
       console.error('SMS error:', smsErr);
     }
 
-    return res.status(200).json({ success: !dbError });
+    return res.status(200).json({ success: !dbError, dbError: dbError ? dbError.message : null });
   } catch (error) {
     console.error('Error:', error);
     return res.status(500).json({ error: 'Internal server error' });
