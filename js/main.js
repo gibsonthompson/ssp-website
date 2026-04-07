@@ -24,8 +24,8 @@ document.addEventListener('DOMContentLoaded', () => {
   if (!form) return;
 
   // Supabase client for photo uploads
-  const SUPABASE_URL = 'https://oschjeuhejqibymdaqxw.supabase.co';
-  const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN6ZHJwZGp5b3JkdnF0a3V1YXpoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY4MDAxMzgsImV4cCI6MjA4MjM3NjEzOH0.7rHx3HXaqe1h7q3y79nMwuXbOR9CcmWrY3WKXFjk8yM';
+  const SUPABASE_URL = 'https://szdrpdjyordvqtkuuazh.supabase.co';
+  const SUPABASE_ANON = 'REPLACE_WITH_ANON_KEY';
   const sb = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON) : null;
 
   form.addEventListener('submit', async (e) => {
