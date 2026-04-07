@@ -6,28 +6,22 @@ const supabase = createClient(
 );
 
 export default async function handler(req, res) {
-  // CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
-
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
+  if (req.method === 'OPTIONS') return res.status(200).end();
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   try {
-    const { name, phone, email, location, service, details } = req.body;
+    const { name, phone, email, location, service, details, photo_urls } = req.body;
 
     if (!name || !phone) {
       return res.status(400).json({ error: 'Name and phone are required' });
     }
 
-    // 1. Insert into Supabase
-    const { data, error: dbError } = await supabase
+    // Insert to Supabase
+    const { error: dbError } = await supabase
       .from('ssp_contact_submissions')
       .insert([{
         name,
@@ -36,26 +30,30 @@ export default async function handler(req, res) {
         location: location || null,
         service: service || null,
         details: details || null,
-      }])
-      .select()
-      .single();
+        photo_urls: photo_urls && photo_urls.length > 0 ? photo_urls : null,
+      }]);
 
-    if (dbError) {
-      console.error('Supabase insert error:', dbError);
-    }
+    if (dbError) console.error('Supabase error:', dbError);
 
-    // 2. Send SMS notification via Telnyx
-    const smsBody = [
+    // Build SMS
+    const lines = [
       `🔶 New SSP Quote Request!`,
       ``,
       `Name: ${name}`,
       `Phone: ${phone}`,
-      email ? `Email: ${email}` : null,
-      location ? `Location: ${location}` : null,
-      service ? `Service: ${service}` : null,
-      details ? `Details: ${details.substring(0, 200)}` : null,
-    ].filter(Boolean).join('\n');
+    ];
+    if (email) lines.push(`Email: ${email}`);
+    if (location) lines.push(`Location: ${location}`);
+    if (service) lines.push(`Service: ${service}`);
+    if (details) lines.push(`Details: ${details.substring(0, 160)}`);
+    if (photo_urls && photo_urls.length > 0) {
+      lines.push(``);
+      lines.push(`📷 ${photo_urls.length} photo(s):`);
+      photo_urls.slice(0, 3).forEach(url => lines.push(url));
+      if (photo_urls.length > 3) lines.push(`...and ${photo_urls.length - 3} more`);
+    }
 
+    // Send SMS via Telnyx
     try {
       await fetch('https://api.telnyx.com/v2/messages', {
         method: 'POST',
@@ -66,17 +64,16 @@ export default async function handler(req, res) {
         body: JSON.stringify({
           from: process.env.TELNYX_PHONE_NUMBER,
           to: process.env.NOTIFY_PHONE_NUMBER,
-          text: smsBody,
+          text: lines.join('\n'),
         }),
       });
-    } catch (smsError) {
-      console.error('SMS send error:', smsError);
-      // Don't fail the request if SMS fails
+    } catch (smsErr) {
+      console.error('SMS error:', smsErr);
     }
 
     return res.status(200).json({ success: true });
   } catch (error) {
-    console.error('Form submission error:', error);
+    console.error('Error:', error);
     return res.status(500).json({ error: 'Internal server error' });
   }
 }
