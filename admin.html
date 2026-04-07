@@ -334,7 +334,7 @@ function rowHTML(r, showPhotos) {
   const status = r.status || 'new';
   const date = new Date(r.created_at).toLocaleDateString('en-US', {month:'short',day:'numeric'});
   const photos = r.photo_urls && r.photo_urls.length > 0
-    ? `<span class="photo-count">📷 ${r.photo_urls.length}</span>` : '—';
+    ? `<span class="photo-count">Photos: ${r.photo_urls.length}</span>` : '—';
   return `<tr onclick="openModal('${r.id}')">
     <td><strong>${r.name||'—'}</strong></td>
     <td>${r.phone||'—'}</td>
@@ -365,9 +365,9 @@ function openModal(id) {
 
   document.getElementById('modal-body').innerHTML = `
     <div class="detail-actions">
-      <a href="tel:${r.phone}" class="action-btn call-btn" onclick="event.stopPropagation()">📞 Call</a>
-      <a href="sms:${r.phone}" class="action-btn text-btn" onclick="event.stopPropagation()">💬 Text</a>
-      ${r.email ? `<a href="mailto:${r.email}" class="action-btn email-btn" onclick="event.stopPropagation()">✉ Email</a>` : ''}
+      <a href="tel:${r.phone}" class="action-btn call-btn" onclick="event.stopPropagation()">Call</a>
+      <a href="sms:${r.phone}" class="action-btn text-btn" onclick="event.stopPropagation()">Text</a>
+      ${r.email ? `<a href="mailto:${r.email}" class="action-btn email-btn" onclick="event.stopPropagation()">Email</a>` : ''}
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
       <div class="detail-row"><div class="detail-label">Phone</div><div class="detail-value"><a href="tel:${r.phone}">${r.phone||'—'}</a></div></div>

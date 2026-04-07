@@ -72,7 +72,6 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = 'thank-you.html';
       } else {
         btn.textContent = 'Try Again';
-        alert('DB Error: ' + (result.dbError || 'unknown'));
         btn.disabled = false;
       }
     } catch (err) {

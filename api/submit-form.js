@@ -34,21 +34,32 @@ export default async function handler(req, res) {
 
     if (dbError) console.error('DB error:', dbError);
 
+    // Format phone: 7709900859 -> (770) 990-0859
+    const formatPhone = (p) => {
+      const digits = p.replace(/\D/g, '');
+      if (digits.length === 10) return `(${digits.slice(0,3)}) ${digits.slice(3,6)}-${digits.slice(6)}`;
+      if (digits.length === 11 && digits[0] === '1') return `(${digits.slice(1,4)}) ${digits.slice(4,7)}-${digits.slice(7)}`;
+      return p;
+    };
+
+    const photoCount = photo_urls && photo_urls.length > 0 ? photo_urls.length : 0;
+
     const lines = [
-      '🔶 New SSP Quote Request!',
+      '🔶 New SSP Quote Request',
       '',
       `Name: ${name}`,
-      `Phone: ${phone}`,
+      `Phone: ${formatPhone(phone)}`,
     ];
     if (email) lines.push(`Email: ${email}`);
     if (location) lines.push(`Location: ${location}`);
     if (service) lines.push(`Service: ${service}`);
     if (details) lines.push(`Details: ${details.substring(0, 160)}`);
-    if (photo_urls && photo_urls.length > 0) {
-      lines.push('');
-      lines.push(`📷 ${photo_urls.length} photo(s):`);
-      photo_urls.slice(0, 3).forEach(url => lines.push(url));
-    }
+    lines.push('');
+    lines.push(photoCount > 0
+      ? `${photoCount} photo(s) - view in dashboard`
+      : 'No photos uploaded'
+    );
+    lines.push('https://stricklandsurfacepreparation.com/admin');
 
     try {
       await fetch('https://api.telnyx.com/v2/messages', {
