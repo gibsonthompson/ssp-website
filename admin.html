@@ -60,26 +60,71 @@ document.getElementById('photo-input').addEventListener('change', async (e) => {
   indicator.textContent = 'Uploading ' + files.length + ' photo(s)...';
   
   for (const file of files) {
+    indicator.textContent = 'Uploading ' + file.name + ' (' + Math.round(file.size/1024) + 'KB)...';
+    
     try {
       const ext = file.name.split('.').pop().toLowerCase();
-      const path = Date.now() + '-' + Math.random().toString(36).slice(2) + '.' + ext;
+      const safeName = Date.now() + '-' + Math.random().toString(36).slice(2) + '.' + (ext === 'heic' ? 'jpg' : ext);
       
-      const { data, error } = await sb.storage.from('ssp-photos').upload(path, file);
-      if (error) { console.error('Upload error:', error); continue; }
+      // Step 1: Upload to storage
+      const { data: uploadData, error: uploadError } = await sb.storage.from('ssp-photos').upload(safeName, file, {
+        cacheControl: '3600',
+        upsert: false,
+        contentType: file.type || 'image/jpeg'
+      });
       
-      const { data: urlData } = sb.storage.from('ssp-photos').getPublicUrl(path);
+      if (uploadError) {
+        indicator.textContent = 'STORAGE ERROR: ' + uploadError.message;
+        indicator.style.background = '#fde8e8';
+        indicator.style.color = '#991b1b';
+        await new Promise(r => setTimeout(r, 3000));
+        continue;
+      }
       
-      await sb.from('ssp_photos').insert([{
+      // Step 2: Get public URL
+      const { data: urlData } = sb.storage.from('ssp-photos').getPublicUrl(uploadData.path);
+      
+      if (!urlData || !urlData.publicUrl) {
+        indicator.textContent = 'URL ERROR: Could not get public URL';
+        indicator.style.background = '#fde8e8';
+        indicator.style.color = '#991b1b';
+        await new Promise(r => setTimeout(r, 3000));
+        continue;
+      }
+      
+      // Step 3: Insert record
+      const { error: dbError } = await sb.from('ssp_photos').insert([{
         url: urlData.publicUrl,
         section: currentPhotoSection,
         sort_order: allPhotos.filter(p => p.section === currentPhotoSection).length
       }]);
+      
+      if (dbError) {
+        indicator.textContent = 'DB ERROR: ' + dbError.message;
+        indicator.style.background = '#fde8e8';
+        indicator.style.color = '#991b1b';
+        await new Promise(r => setTimeout(r, 3000));
+        continue;
+      }
+      
+      indicator.textContent = file.name + ' uploaded successfully!';
+      indicator.style.background = '#d1fae5';
+      indicator.style.color = '#065f46';
+      
     } catch (err) {
-      console.error('Upload failed:', err);
+      indicator.textContent = 'ERROR: ' + err.message;
+      indicator.style.background = '#fde8e8';
+      indicator.style.color = '#991b1b';
+      await new Promise(r => setTimeout(r, 3000));
     }
   }
   
-  indicator.style.display = 'none';
+  setTimeout(() => {
+    indicator.style.display = 'none';
+    indicator.style.background = '#fef3c7';
+    indicator.style.color = '#92400e';
+  }, 2000);
+  
   e.target.value = '';
   await loadPhotos();
 });
@@ -652,26 +697,71 @@ document.getElementById('photo-input').addEventListener('change', async (e) => {
   indicator.textContent = 'Uploading ' + files.length + ' photo(s)...';
   
   for (const file of files) {
+    indicator.textContent = 'Uploading ' + file.name + ' (' + Math.round(file.size/1024) + 'KB)...';
+    
     try {
       const ext = file.name.split('.').pop().toLowerCase();
-      const path = Date.now() + '-' + Math.random().toString(36).slice(2) + '.' + ext;
+      const safeName = Date.now() + '-' + Math.random().toString(36).slice(2) + '.' + (ext === 'heic' ? 'jpg' : ext);
       
-      const { data, error } = await sb.storage.from('ssp-photos').upload(path, file);
-      if (error) { console.error('Upload error:', error); continue; }
+      // Step 1: Upload to storage
+      const { data: uploadData, error: uploadError } = await sb.storage.from('ssp-photos').upload(safeName, file, {
+        cacheControl: '3600',
+        upsert: false,
+        contentType: file.type || 'image/jpeg'
+      });
       
-      const { data: urlData } = sb.storage.from('ssp-photos').getPublicUrl(path);
+      if (uploadError) {
+        indicator.textContent = 'STORAGE ERROR: ' + uploadError.message;
+        indicator.style.background = '#fde8e8';
+        indicator.style.color = '#991b1b';
+        await new Promise(r => setTimeout(r, 3000));
+        continue;
+      }
       
-      await sb.from('ssp_photos').insert([{
+      // Step 2: Get public URL
+      const { data: urlData } = sb.storage.from('ssp-photos').getPublicUrl(uploadData.path);
+      
+      if (!urlData || !urlData.publicUrl) {
+        indicator.textContent = 'URL ERROR: Could not get public URL';
+        indicator.style.background = '#fde8e8';
+        indicator.style.color = '#991b1b';
+        await new Promise(r => setTimeout(r, 3000));
+        continue;
+      }
+      
+      // Step 3: Insert record
+      const { error: dbError } = await sb.from('ssp_photos').insert([{
         url: urlData.publicUrl,
         section: currentPhotoSection,
         sort_order: allPhotos.filter(p => p.section === currentPhotoSection).length
       }]);
+      
+      if (dbError) {
+        indicator.textContent = 'DB ERROR: ' + dbError.message;
+        indicator.style.background = '#fde8e8';
+        indicator.style.color = '#991b1b';
+        await new Promise(r => setTimeout(r, 3000));
+        continue;
+      }
+      
+      indicator.textContent = file.name + ' uploaded successfully!';
+      indicator.style.background = '#d1fae5';
+      indicator.style.color = '#065f46';
+      
     } catch (err) {
-      console.error('Upload failed:', err);
+      indicator.textContent = 'ERROR: ' + err.message;
+      indicator.style.background = '#fde8e8';
+      indicator.style.color = '#991b1b';
+      await new Promise(r => setTimeout(r, 3000));
     }
   }
   
-  indicator.style.display = 'none';
+  setTimeout(() => {
+    indicator.style.display = 'none';
+    indicator.style.background = '#fef3c7';
+    indicator.style.color = '#92400e';
+  }, 2000);
+  
   e.target.value = '';
   await loadPhotos();
 });
