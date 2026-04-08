@@ -7,7 +7,7 @@
 <meta name="robots" content="noindex,nofollow">
 <link rel="icon" type="image/png" href="images/ssp-logo.png">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/heic-to@1.4.2/dist/iife/heic-to.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Open+Sans:wght@400;500;600;700&display=swap');
 *{margin:0;padding:0;box-sizing:border-box}
@@ -518,16 +518,14 @@ document.getElementById('photo-input').addEventListener('change', async (e) => {
         || file.type === 'image/heic' || file.type === 'image/heif'
         || file.name.toLowerCase().includes('.heic') || file.name.toLowerCase().includes('.heif');
 
-      console.log('Processing file:', file.name, 'type:', file.type, 'ext:', ext, 'isHeic:', isHeic, 'heic2any available:', typeof heic2any);
+      console.log('Processing file:', file.name, 'type:', file.type, 'ext:', ext, 'isHeic:', isHeic, 'HeicTo available:', typeof HeicTo);
 
-      // Convert HEIC/HEIF to JPEG
+      // Convert HEIC/HEIF to JPEG using heic-to
       if (isHeic) {
         indicator.textContent = 'Converting ' + file.name + ' from HEIC to JPEG...';
         try {
-          if (typeof heic2any === 'undefined') throw new Error('heic2any library not loaded');
-          const result = await heic2any({ blob: file, toType: 'image/jpeg', quality: 0.85 });
-          // heic2any can return a single blob or an array of blobs
-          const convertedBlob = Array.isArray(result) ? result[0] : result;
+          if (typeof HeicTo === 'undefined') throw new Error('HeicTo library not loaded');
+          const convertedBlob = await HeicTo({ blob: file, type: 'image/jpeg', quality: 0.85 });
           uploadFile = new File([convertedBlob], file.name.replace(/\.(heic|heif)$/i, '.jpg'), { type: 'image/jpeg' });
           ext = 'jpg';
           console.log('HEIC converted successfully, new size:', uploadFile.size);
