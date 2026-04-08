@@ -7,6 +7,7 @@
 <meta name="robots" content="noindex,nofollow">
 <link rel="icon" type="image/png" href="images/ssp-logo.png">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Open+Sans:wght@400;500;600;700&display=swap');
 *{margin:0;padding:0;box-sizing:border-box}
@@ -215,9 +216,9 @@ tr{cursor:pointer}
         <button onclick="setPhotoSection('gallery', this)">Gallery</button>
       </div>
       <div class="upload-area" onclick="document.getElementById('photo-input').click()">
-        <input type="file" id="photo-input" multiple accept="image/*">
+        <input type="file" id="photo-input" multiple accept="image/*,.heic,.heif">
         <h3>Click to Upload Photos</h3>
-        <p>Select images to add to <span id="upload-section-label">Homepage</span></p>
+        <p>Select images to add to <span id="upload-section-label">Homepage</span> (HEIC supported)</p>
       </div>
       <div class="uploading-indicator" id="uploading">Uploading photos...</div>
       <h3 style="font-size:.85rem;color:var(--g600);margin-bottom:12px;" id="photos-count">0 Photos</h3>
@@ -509,15 +510,36 @@ document.getElementById('photo-input').addEventListener('change', async (e) => {
   indicator.textContent = 'Uploading ' + files.length + ' photo(s)...';
 
   for (const file of files) {
-    indicator.textContent = 'Uploading ' + file.name + ' (' + Math.round(file.size/1024) + 'KB)...';
+    indicator.textContent = 'Processing ' + file.name + ' (' + Math.round(file.size/1024) + 'KB)...';
     try {
-      const ext = file.name.split('.').pop().toLowerCase();
-      const safeName = Date.now() + '-' + Math.random().toString(36).slice(2) + '.' + (ext === 'heic' ? 'jpg' : ext);
+      let uploadFile = file;
+      let ext = file.name.split('.').pop().toLowerCase();
 
-      const { data: uploadData, error: uploadError } = await sb.storage.from('ssp-photos').upload(safeName, file, {
+      // Convert HEIC/HEIF to JPEG
+      if (ext === 'heic' || ext === 'heif' || file.type === 'image/heic' || file.type === 'image/heif') {
+        indicator.textContent = 'Converting ' + file.name + ' from HEIC...';
+        try {
+          const blob = await heic2any({ blob: file, toType: 'image/jpeg', quality: 0.85 });
+          uploadFile = new File([blob], file.name.replace(/\.heic$/i, '.jpg').replace(/\.heif$/i, '.jpg'), { type: 'image/jpeg' });
+          ext = 'jpg';
+        } catch (convErr) {
+          indicator.textContent = 'HEIC conversion failed: ' + convErr.message;
+          indicator.style.background = '#fde8e8';
+          indicator.style.color = '#991b1b';
+          console.error('HEIC convert error:', convErr);
+          await new Promise(r => setTimeout(r, 3000));
+          continue;
+        }
+      }
+
+      const safeName = Date.now() + '-' + Math.random().toString(36).slice(2) + '.' + ext;
+
+      indicator.textContent = 'Uploading ' + file.name + '...';
+
+      const { data: uploadData, error: uploadError } = await sb.storage.from('ssp-photos').upload(safeName, uploadFile, {
         cacheControl: '3600',
         upsert: false,
-        contentType: file.type || 'image/jpeg'
+        contentType: uploadFile.type || 'image/jpeg'
       });
       if (uploadError) {
         indicator.textContent = 'STORAGE ERROR: ' + uploadError.message;
