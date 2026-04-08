@@ -514,14 +514,23 @@ document.getElementById('photo-input').addEventListener('change', async (e) => {
     try {
       let uploadFile = file;
       let ext = file.name.split('.').pop().toLowerCase();
+      const isHeic = ext === 'heic' || ext === 'heif' 
+        || file.type === 'image/heic' || file.type === 'image/heif'
+        || file.name.toLowerCase().includes('.heic') || file.name.toLowerCase().includes('.heif');
+
+      console.log('Processing file:', file.name, 'type:', file.type, 'ext:', ext, 'isHeic:', isHeic, 'heic2any available:', typeof heic2any);
 
       // Convert HEIC/HEIF to JPEG
-      if (ext === 'heic' || ext === 'heif' || file.type === 'image/heic' || file.type === 'image/heif') {
-        indicator.textContent = 'Converting ' + file.name + ' from HEIC...';
+      if (isHeic) {
+        indicator.textContent = 'Converting ' + file.name + ' from HEIC to JPEG...';
         try {
-          const blob = await heic2any({ blob: file, toType: 'image/jpeg', quality: 0.85 });
-          uploadFile = new File([blob], file.name.replace(/\.heic$/i, '.jpg').replace(/\.heif$/i, '.jpg'), { type: 'image/jpeg' });
+          if (typeof heic2any === 'undefined') throw new Error('heic2any library not loaded');
+          const result = await heic2any({ blob: file, toType: 'image/jpeg', quality: 0.85 });
+          // heic2any can return a single blob or an array of blobs
+          const convertedBlob = Array.isArray(result) ? result[0] : result;
+          uploadFile = new File([convertedBlob], file.name.replace(/\.(heic|heif)$/i, '.jpg'), { type: 'image/jpeg' });
           ext = 'jpg';
+          console.log('HEIC converted successfully, new size:', uploadFile.size);
         } catch (convErr) {
           indicator.textContent = 'HEIC conversion failed: ' + convErr.message;
           indicator.style.background = '#fde8e8';
