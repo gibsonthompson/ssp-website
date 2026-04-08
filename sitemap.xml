@@ -38,4 +38,14 @@
   <url><loc>https://stricklandsurfacepreparation.com/areas/alpharetta-ga.html</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
   <url><loc>https://stricklandsurfacepreparation.com/areas/marietta-ga.html</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
   <url><loc>https://stricklandsurfacepreparation.com/areas/atlanta-ga.html</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
+
+  <!-- Industry Pages -->
+  <url><loc>https://stricklandsurfacepreparation.com/industries/manufacturing.html</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://stricklandsurfacepreparation.com/industries/construction.html</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://stricklandsurfacepreparation.com/industries/warehousing.html</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://stricklandsurfacepreparation.com/industries/property-management.html</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://stricklandsurfacepreparation.com/industries/agriculture.html</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://stricklandsurfacepreparation.com/industries/marine.html</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://stricklandsurfacepreparation.com/industries/automotive.html</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://stricklandsurfacepreparation.com/industries/historic-renovation.html</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
 </urlset>
