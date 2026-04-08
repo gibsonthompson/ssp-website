@@ -64,10 +64,10 @@ document.getElementById('photo-input').addEventListener('change', async (e) => {
       const ext = file.name.split('.').pop().toLowerCase();
       const path = Date.now() + '-' + Math.random().toString(36).slice(2) + '.' + ext;
       
-      const { data, error } = await sb.storage.from('ssp-photos').upload('site/' + path, file);
+      const { data, error } = await sb.storage.from('ssp-photos').upload(path, file);
       if (error) { console.error('Upload error:', error); continue; }
       
-      const { data: urlData } = sb.storage.from('ssp-photos').getPublicUrl('site/' + path);
+      const { data: urlData } = sb.storage.from('ssp-photos').getPublicUrl(path);
       
       await sb.from('ssp_photos').insert([{
         url: urlData.publicUrl,
@@ -93,8 +93,8 @@ async function deletePhoto(id, url) {
   if (!confirm('Delete this photo?')) return;
   
   // Delete from storage
-  const path = url.split('/ssp-photos/')[1];
-  if (path) await sb.storage.from('ssp-photos').remove([path]);
+  const storagePath = url.split('/ssp-photos/')[1];
+  if (storagePath) await sb.storage.from('ssp-photos').remove([storagePath]);
   
   // Delete from table
   await sb.from('ssp_photos').delete().eq('id', id);
@@ -656,10 +656,10 @@ document.getElementById('photo-input').addEventListener('change', async (e) => {
       const ext = file.name.split('.').pop().toLowerCase();
       const path = Date.now() + '-' + Math.random().toString(36).slice(2) + '.' + ext;
       
-      const { data, error } = await sb.storage.from('ssp-photos').upload('site/' + path, file);
+      const { data, error } = await sb.storage.from('ssp-photos').upload(path, file);
       if (error) { console.error('Upload error:', error); continue; }
       
-      const { data: urlData } = sb.storage.from('ssp-photos').getPublicUrl('site/' + path);
+      const { data: urlData } = sb.storage.from('ssp-photos').getPublicUrl(path);
       
       await sb.from('ssp_photos').insert([{
         url: urlData.publicUrl,
@@ -685,8 +685,8 @@ async function deletePhoto(id, url) {
   if (!confirm('Delete this photo?')) return;
   
   // Delete from storage
-  const path = url.split('/ssp-photos/')[1];
-  if (path) await sb.storage.from('ssp-photos').remove([path]);
+  const storagePath = url.split('/ssp-photos/')[1];
+  if (storagePath) await sb.storage.from('ssp-photos').remove([storagePath]);
   
   // Delete from table
   await sb.from('ssp_photos').delete().eq('id', id);
