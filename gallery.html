@@ -31,7 +31,7 @@
       try{
         const sb=window.supabase.createClient('https://szdrpdjyordvqtkuuazh.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN6ZHJwZGp5b3JkdnF0a3V1YXpoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY4MDAxMzgsImV4cCI6MjA4MjM3NjEzOH0.7rHx3HXaqe1h7q3y79nMwuXbOR9CcmWrY3WKXFjk8yM');
         const{data}=await sb.from('ssp_photos').select('*').eq('section','gallery').order('sort_order').order('created_at',{ascending:false});
-        if(data&&data.length>=3){
+        if(data&&data.length>0){
           const grid=document.querySelector('.gallery-grid');
           if(grid)grid.innerHTML=data.map(p=>'<div class="gallery-item"><img src="'+p.url+'" alt="'+(p.caption||'SSP project')+'" loading="lazy" onerror="this.parentElement.style.display='none'"></div>').join('');
         }
