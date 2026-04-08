@@ -415,6 +415,7 @@ function openModal(id) {
       <textarea class="notes-textarea" id="modal-notes" placeholder="Add notes about this lead...">${r.notes||''}</textarea>
     </div>
     <button class="save-btn" id="save-btn" onclick="saveChanges()">Save Changes</button>
+    <button class="save-btn" id="delete-btn" onclick="deleteSubmission()" style="background:#dc2626;margin-left:8px;">Delete</button>
     <div class="saved-msg" id="saved-msg">✓ Saved</div>
   `;
   document.getElementById('modal').classList.add('open');
@@ -446,6 +447,36 @@ async function saveChanges() {
   } else { alert('Error saving: ' + error.message); }
   btn.disabled = false;
   btn.textContent = 'Save Changes';
+}
+
+async function deleteSubmission() {
+  if (!currentId) return;
+  if (!confirm('Permanently delete this submission? This cannot be undone.')) return;
+  const btn = document.getElementById('delete-btn');
+  btn.disabled = true;
+  btn.textContent = 'Deleting...';
+
+  // Delete any attached photos from storage
+  const submission = allSubmissions.find(x => x.id === currentId);
+  if (submission && submission.photo_urls && submission.photo_urls.length > 0) {
+    for (const url of submission.photo_urls) {
+      const storagePath = url.split('/uploads/')[1] || url.split('/booking-photos/')[1];
+      if (storagePath) {
+        await sb.storage.from('uploads').remove([decodeURIComponent(storagePath)]).catch(() => {});
+      }
+    }
+  }
+
+  const { error } = await sb.from('ssp_contact_submissions').delete().eq('id', currentId);
+  if (!error) {
+    allSubmissions = allSubmissions.filter(x => x.id !== currentId);
+    renderStats(); renderRecent(); renderContacts();
+    closeModal();
+  } else {
+    alert('Error deleting: ' + error.message);
+    btn.disabled = false;
+    btn.textContent = 'Delete';
+  }
 }
 
 // ---- Lightbox ----
