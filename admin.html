@@ -6,147 +6,7 @@
 <title>SSP Admin</title>
 <meta name="robots" content="noindex,nofollow">
 <link rel="icon" type="image/png" href="images/ssp-logo.png">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
-// ---- Photo Manager ----
-let currentPhotoSection = 'homepage';
-let allPhotos = [];
-
-function setPhotoSection(section) {
-  currentPhotoSection = section;
-  document.querySelectorAll('.section-toggle button').forEach(b => b.classList.remove('active'));
-  event.target.classList.add('active');
-  document.getElementById('upload-section-label').textContent = section === 'homepage' ? 'Homepage' : 'Gallery';
-  renderPhotos();
-}
-
-async function loadPhotos() {
-  const { data, error } = await sb
-    .from('ssp_photos')
-    .select('*')
-    .order('sort_order', { ascending: true })
-    .order('created_at', { ascending: false });
-  if (!error) allPhotos = data || [];
-  renderPhotos();
-}
-
-function renderPhotos() {
-  const filtered = allPhotos.filter(p => p.section === currentPhotoSection);
-  document.getElementById('photos-count').textContent = filtered.length + ' ' + (currentPhotoSection === 'homepage' ? 'Homepage' : 'Gallery') + ' Photos';
-  
-  const grid = document.getElementById('photo-grid');
-  if (filtered.length === 0) {
-    grid.innerHTML = '<p style="color:var(--g400);font-size:.85rem;">No photos in this section yet. Upload some above.</p>';
-    return;
-  }
-  
-  grid.innerHTML = filtered.map(p => `
-    <div class="photo-card">
-      <img src="${p.url}" loading="lazy" onclick="openLightbox('${p.url}')">
-      <span class="photo-card-badge ${p.section}">${p.section}</span>
-      <div class="photo-card-overlay">
-        <button class="photo-action move" onclick="movePhoto('${p.id}','${p.section === 'homepage' ? 'gallery' : 'homepage'}')">${p.section === 'homepage' ? 'To Gallery' : 'To Home'}</button>
-        <button class="photo-action delete" onclick="deletePhoto('${p.id}','${p.url}')">Delete</button>
-      </div>
-    </div>
-  `).join('');
-}
-
-document.getElementById('photo-input').addEventListener('change', async (e) => {
-  const files = e.target.files;
-  if (!files.length) return;
-  
-  const indicator = document.getElementById('uploading');
-  indicator.style.display = 'block';
-  indicator.textContent = 'Uploading ' + files.length + ' photo(s)...';
-  
-  for (const file of files) {
-    indicator.textContent = 'Uploading ' + file.name + ' (' + Math.round(file.size/1024) + 'KB)...';
-    
-    try {
-      const ext = file.name.split('.').pop().toLowerCase();
-      const safeName = Date.now() + '-' + Math.random().toString(36).slice(2) + '.' + (ext === 'heic' ? 'jpg' : ext);
-      
-      // Step 1: Upload to storage
-      const { data: uploadData, error: uploadError } = await sb.storage.from('ssp-photos').upload(safeName, file, {
-        cacheControl: '3600',
-        upsert: false,
-        contentType: file.type || 'image/jpeg'
-      });
-      
-      if (uploadError) {
-        indicator.textContent = 'STORAGE ERROR: ' + uploadError.message;
-        indicator.style.background = '#fde8e8';
-        indicator.style.color = '#991b1b';
-        await new Promise(r => setTimeout(r, 3000));
-        continue;
-      }
-      
-      // Step 2: Get public URL
-      const { data: urlData } = sb.storage.from('ssp-photos').getPublicUrl(uploadData.path);
-      
-      if (!urlData || !urlData.publicUrl) {
-        indicator.textContent = 'URL ERROR: Could not get public URL';
-        indicator.style.background = '#fde8e8';
-        indicator.style.color = '#991b1b';
-        await new Promise(r => setTimeout(r, 3000));
-        continue;
-      }
-      
-      // Step 3: Insert record
-      const { error: dbError } = await sb.from('ssp_photos').insert([{
-        url: urlData.publicUrl,
-        section: currentPhotoSection,
-        sort_order: allPhotos.filter(p => p.section === currentPhotoSection).length
-      }]);
-      
-      if (dbError) {
-        indicator.textContent = 'DB ERROR: ' + dbError.message;
-        indicator.style.background = '#fde8e8';
-        indicator.style.color = '#991b1b';
-        await new Promise(r => setTimeout(r, 3000));
-        continue;
-      }
-      
-      indicator.textContent = file.name + ' uploaded successfully!';
-      indicator.style.background = '#d1fae5';
-      indicator.style.color = '#065f46';
-      
-    } catch (err) {
-      indicator.textContent = 'ERROR: ' + err.message;
-      indicator.style.background = '#fde8e8';
-      indicator.style.color = '#991b1b';
-      await new Promise(r => setTimeout(r, 3000));
-    }
-  }
-  
-  setTimeout(() => {
-    indicator.style.display = 'none';
-    indicator.style.background = '#fef3c7';
-    indicator.style.color = '#92400e';
-  }, 2000);
-  
-  e.target.value = '';
-  await loadPhotos();
-});
-
-async function movePhoto(id, newSection) {
-  await sb.from('ssp_photos').update({ section: newSection }).eq('id', id);
-  await loadPhotos();
-}
-
-async function deletePhoto(id, url) {
-  if (!confirm('Delete this photo?')) return;
-  
-  // Delete from storage
-  const storagePath = url.split('/ssp-photos/')[1];
-  if (storagePath) await sb.storage.from('ssp-photos').remove([storagePath]);
-  
-  // Delete from table
-  await sb.from('ssp_photos').delete().eq('id', id);
-  await loadPhotos();
-}
-
-</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Open+Sans:wght@400;500;600;700&display=swap');
 *{margin:0;padding:0;box-sizing:border-box}
@@ -154,8 +14,6 @@ async function deletePhoto(id, url) {
 body{font-family:'Open Sans',sans-serif;background:var(--g100);color:var(--g800);font-size:14px;min-height:100vh}
 h1,h2,h3,h4{font-family:'Oswald',sans-serif;font-weight:700;text-transform:uppercase}
 a{color:var(--orange);text-decoration:none}
-
-/* PIN Screen */
 .pin-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--dark);padding:20px}
 .pin-box{background:var(--white);padding:40px 32px;border-radius:8px;max-width:360px;width:100%;text-align:center}
 .pin-box img{height:60px;margin:0 auto 20px}
@@ -166,8 +24,6 @@ a{color:var(--orange);text-decoration:none}
 .pin-input.error{border-color:#e53e3e;background:#fff5f5}
 .pin-btn{width:100%;padding:14px;background:var(--orange);color:#fff;border:none;border-radius:8px;font-family:'Oswald',sans-serif;font-size:1rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;cursor:pointer;margin-top:16px}
 .pin-btn:hover{background:var(--orange-dark)}
-
-/* App Shell */
 .app{display:none}
 .topbar{background:var(--black);padding:12px 20px;display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid var(--orange);position:sticky;top:0;z-index:50}
 .topbar-left{display:flex;align-items:center;gap:12px}
@@ -178,25 +34,17 @@ a{color:var(--orange);text-decoration:none}
 .topbar-right a:hover{color:var(--orange)}
 .logout-btn{background:none;border:1px solid var(--g600);color:var(--g400);padding:6px 14px;border-radius:4px;cursor:pointer;font-family:'Oswald',sans-serif;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
 .logout-btn:hover{border-color:var(--orange);color:var(--orange)}
-
-/* Tabs */
 .tabs{display:flex;gap:0;background:var(--white);border-bottom:1px solid var(--g200);padding:0 20px;overflow-x:auto}
 .tab{padding:14px 20px;font-family:'Oswald',sans-serif;font-size:.85rem;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--g600);cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;transition:.2s}
 .tab:hover{color:var(--black)}
 .tab.active{color:var(--orange);border-bottom-color:var(--orange)}
-
-/* Content */
 .content{padding:20px;max-width:1200px;margin:0 auto}
 .panel{display:none}
 .panel.active{display:block}
-
-/* Stats */
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:24px}
 .stat-card{background:var(--white);border-radius:6px;padding:16px;border-left:4px solid var(--orange)}
 .stat-card .num{font-family:'Oswald',sans-serif;font-size:1.8rem;font-weight:700;color:var(--black);line-height:1}
 .stat-card .label{font-size:.75rem;color:var(--g600);text-transform:uppercase;letter-spacing:.05em;margin-top:4px}
-
-/* Table */
 .table-wrap{background:var(--white);border-radius:6px;overflow:hidden}
 .table-header{padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;border-bottom:1px solid var(--g200)}
 .search-input{padding:8px 12px;border:1px solid var(--g200);border-radius:4px;font-size:.85rem;width:220px;outline:none}
@@ -215,8 +63,6 @@ tr{cursor:pointer}
 .status-completed{background:#d1fae5;color:#065f46}
 .status-lost{background:#fde8e8;color:#991b1b}
 .photo-count{display:inline-flex;align-items:center;gap:4px;color:var(--orange);font-size:.8rem}
-
-/* Detail Modal */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;display:none;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto}
 .modal-overlay.open{display:flex}
 .modal{background:var(--white);border-radius:8px;max-width:640px;width:100%;margin-top:40px;margin-bottom:40px}
@@ -237,16 +83,12 @@ tr{cursor:pointer}
 .text-btn:hover{background:#1d4ed8}
 .email-btn{background:var(--g800);color:#fff}
 .email-btn:hover{background:var(--black)}
-
-/* Photos */
 .photos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px;margin-top:8px}
 .photo-thumb{aspect-ratio:1;border-radius:4px;overflow:hidden;cursor:pointer;border:1px solid var(--g200)}
 .photo-thumb img{width:100%;height:100%;object-fit:cover}
 .photo-lightbox{position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:200;display:none;align-items:center;justify-content:center;padding:20px;cursor:pointer}
 .photo-lightbox.open{display:flex}
 .photo-lightbox img{max-width:90%;max-height:90vh;border-radius:4px}
-
-/* Status/Notes */
 .status-select{padding:8px 12px;border:1px solid var(--g200);border-radius:4px;font-size:.85rem;width:100%;outline:none}
 .status-select:focus{border-color:var(--orange)}
 .notes-textarea{width:100%;padding:10px 12px;border:1px solid var(--g200);border-radius:4px;font-size:.85rem;font-family:'Open Sans',sans-serif;min-height:80px;resize:vertical;outline:none}
@@ -255,26 +97,8 @@ tr{cursor:pointer}
 .save-btn:hover{background:var(--orange-dark)}
 .save-btn:disabled{opacity:.5;cursor:default}
 .saved-msg{color:#16a34a;font-size:.8rem;margin-top:6px;display:none}
-
-/* Empty state */
 .empty{text-align:center;padding:60px 20px;color:var(--g400)}
 .empty h3{font-size:1.1rem;margin-bottom:6px}
-
-/* Responsive */
-@media(max-width:768px){
-  .stats{grid-template-columns:repeat(2,1fr)}
-  th:nth-child(4),td:nth-child(4),th:nth-child(5),td:nth-child(5){display:none}
-  .detail-actions{flex-wrap:wrap}
-  .table-header{flex-direction:column;align-items:stretch}
-  .search-input{width:100%}
-}
-@media(max-width:480px){
-  th:nth-child(3),td:nth-child(3){display:none}
-  .tab{padding:12px 14px;font-size:.8rem}
-  .stat-card .num{font-size:1.4rem}
-}
-
-/* Photo Manager */
 .section-toggle{display:flex;gap:2px;margin-bottom:16px;background:var(--g100);border-radius:4px;padding:3px;max-width:280px}
 .section-toggle button{flex:1;padding:8px 16px;border:none;background:transparent;font-family:'Oswald',sans-serif;font-size:.78rem;text-transform:uppercase;letter-spacing:.05em;color:var(--g600);cursor:pointer;transition:.2s;border-radius:3px}
 .section-toggle button.active{background:var(--orange);color:#fff}
@@ -295,7 +119,17 @@ tr{cursor:pointer}
 .photo-action.delete{background:#dc2626}
 .photo-action.move{background:#2563eb}
 .uploading-indicator{padding:12px 16px;background:#fef3c7;border-radius:4px;margin-bottom:12px;font-size:.82rem;color:#92400e;display:none}
+@media(max-width:768px){
+  .stats{grid-template-columns:repeat(2,1fr)}
+  th:nth-child(4),td:nth-child(4),th:nth-child(5),td:nth-child(5){display:none}
+  .detail-actions{flex-wrap:wrap}
+  .table-header{flex-direction:column;align-items:stretch}
+  .search-input{width:100%}
+}
 @media(max-width:480px){
+  th:nth-child(3),td:nth-child(3){display:none}
+  .tab{padding:12px 14px;font-size:.8rem}
+  .stat-card .num{font-size:1.4rem}
   .section-toggle{max-width:100%}
   .photo-grid{grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:6px}
   .upload-area{padding:20px 16px}
@@ -373,13 +207,14 @@ tr{cursor:pointer}
         <div class="empty" id="empty-state" style="display:none"><h3>No submissions yet</h3><p>Form submissions will appear here.</p></div>
       </div>
     </div>
-<!-- Photos Panel -->
+
+    <!-- Photos Panel -->
     <div id="panel-photos" class="panel">
       <div class="section-toggle">
-        <button class="active" onclick="setPhotoSection('homepage')">Homepage</button>
-        <button onclick="setPhotoSection('gallery')">Gallery</button>
+        <button class="active" onclick="setPhotoSection('homepage', this)">Homepage</button>
+        <button onclick="setPhotoSection('gallery', this)">Gallery</button>
       </div>
-      <div class="upload-area" id="upload-area" onclick="document.getElementById('photo-input').click()">
+      <div class="upload-area" onclick="document.getElementById('photo-input').click()">
         <input type="file" id="photo-input" multiple accept="image/*">
         <h3>Click to Upload Photos</h3>
         <p>Select images to add to <span id="upload-section-label">Homepage</span></p>
@@ -408,23 +243,26 @@ tr{cursor:pointer}
 </div>
 
 <script>
+// ---- Supabase Init ----
 const SUPABASE_URL = 'https://szdrpdjyordvqtkuuazh.supabase.co';
 const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN6ZHJwZGp5b3JkdnF0a3V1YXpoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY4MDAxMzgsImV4cCI6MjA4MjM3NjEzOH0.7rHx3HXaqe1h7q3y79nMwuXbOR9CcmWrY3WKXFjk8yM';
-const ADMIN_PIN = '2026'; // Change this
+const ADMIN_PIN = '2026';
 
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 let allSubmissions = [];
 let currentId = null;
+let currentPhotoSection = 'homepage';
+let allPhotos = [];
 
 // ---- Auth ----
 const pinForm = document.getElementById('pin-form');
 const pinInput = document.getElementById('pin-input');
 const pinScreen = document.getElementById('pin-screen');
-const app = document.getElementById('app');
+const appEl = document.getElementById('app');
 
 if (sessionStorage.getItem('ssp_admin') === 'true') {
   pinScreen.style.display = 'none';
-  app.style.display = 'block';
+  appEl.style.display = 'block';
   loadData();
 }
 
@@ -433,7 +271,7 @@ pinForm.addEventListener('submit', (e) => {
   if (pinInput.value === ADMIN_PIN) {
     sessionStorage.setItem('ssp_admin', 'true');
     pinScreen.style.display = 'none';
-    app.style.display = 'block';
+    appEl.style.display = 'block';
     loadData();
   } else {
     pinInput.classList.add('error');
@@ -454,16 +292,16 @@ document.querySelectorAll('.tab').forEach(tab => {
     document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
     tab.classList.add('active');
     document.getElementById('panel-' + tab.dataset.tab).classList.add('active');
+    if (tab.dataset.tab === 'photos' && allPhotos.length === 0) loadPhotos();
   });
 });
 
-// ---- Data ----
+// ---- Contacts Data ----
 async function loadData() {
   const { data, error } = await sb
     .from('ssp_contact_submissions')
     .select('*')
     .order('created_at', { ascending: false });
-
   if (error) { console.error(error); return; }
   allSubmissions = data || [];
   renderStats();
@@ -476,7 +314,6 @@ function renderStats() {
   const now = new Date();
   const weekAgo = new Date(now - 7*24*60*60*1000);
   const thisWeek = s.filter(x => new Date(x.created_at) >= weekAgo).length;
-
   document.getElementById('stats').innerHTML = `
     <div class="stat-card"><div class="num">${s.length}</div><div class="label">Total</div></div>
     <div class="stat-card"><div class="num">${s.filter(x=>x.status==='new'||!x.status).length}</div><div class="label">New</div></div>
@@ -495,7 +332,6 @@ function renderRecent() {
 function renderContacts() {
   const search = (document.getElementById('search')?.value || '').toLowerCase();
   const filter = document.getElementById('status-filter')?.value || 'all';
-
   let filtered = allSubmissions;
   if (filter !== 'all') filtered = filtered.filter(x => (x.status || 'new') === filter);
   if (search) filtered = filtered.filter(x =>
@@ -503,7 +339,6 @@ function renderContacts() {
     (x.phone||'').includes(search) ||
     (x.email||'').toLowerCase().includes(search)
   );
-
   const tbody = document.getElementById('contacts-tbody');
   const empty = document.getElementById('empty-state');
   if (filtered.length === 0) {
@@ -519,15 +354,14 @@ function rowHTML(r, showPhotos) {
   const status = r.status || 'new';
   const date = new Date(r.created_at).toLocaleDateString('en-US', {month:'short',day:'numeric'});
   const photos = r.photo_urls && r.photo_urls.length > 0
-    ? `<span class="photo-count">Photos: ${r.photo_urls.length}</span>` : '—';
-  return `<tr onclick="openModal('${r.id}')">
-    <td><strong>${r.name||'—'}</strong></td>
-    <td>${r.phone||'—'}</td>
-    <td>${r.service||'—'}</td>
-    ${showPhotos ? `<td>${photos}</td>` : ''}
-    <td><span class="status-badge status-${status}">${status}</span></td>
-    <td>${date}</td>
-  </tr>`;
+    ? '<span class="photo-count">Photos: '+r.photo_urls.length+'</span>' : '—';
+  return '<tr onclick="openModal(\''+r.id+'\')">'+
+    '<td><strong>'+(r.name||'—')+'</strong></td>'+
+    '<td>'+(r.phone||'—')+'</td>'+
+    '<td>'+(r.service||'—')+'</td>'+
+    (showPhotos ? '<td>'+photos+'</td>' : '')+
+    '<td><span class="status-badge status-'+status+'">'+status+'</span></td>'+
+    '<td>'+date+'</td></tr>';
 }
 
 document.getElementById('search')?.addEventListener('input', renderContacts);
@@ -539,24 +373,22 @@ function openModal(id) {
   if (!r) return;
   currentId = id;
   document.getElementById('modal-name').textContent = r.name || 'Submission';
-
   let photosHTML = '';
   if (r.photo_urls && r.photo_urls.length > 0) {
-    photosHTML = `<div class="detail-row"><div class="detail-label">Photos (${r.photo_urls.length})</div>
-      <div class="photos-grid">${r.photo_urls.map(url =>
-        `<div class="photo-thumb" onclick="event.stopPropagation();openLightbox('${url}')"><img src="${url}" loading="lazy"></div>`
-      ).join('')}</div></div>`;
+    photosHTML = '<div class="detail-row"><div class="detail-label">Photos ('+r.photo_urls.length+')</div>'+
+      '<div class="photos-grid">'+r.photo_urls.map(url =>
+        '<div class="photo-thumb" onclick="event.stopPropagation();openLightbox(\''+url+'\')"><img src="'+url+'" loading="lazy"></div>'
+      ).join('')+'</div></div>';
   }
-
   document.getElementById('modal-body').innerHTML = `
     <div class="detail-actions">
       <a href="tel:${r.phone}" class="action-btn call-btn" onclick="event.stopPropagation()">Call</a>
       <a href="sms:${r.phone}" class="action-btn text-btn" onclick="event.stopPropagation()">Text</a>
-      ${r.email ? `<a href="mailto:${r.email}" class="action-btn email-btn" onclick="event.stopPropagation()">Email</a>` : ''}
+      ${r.email ? '<a href="mailto:'+r.email+'" class="action-btn email-btn" onclick="event.stopPropagation()">Email</a>' : ''}
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
       <div class="detail-row"><div class="detail-label">Phone</div><div class="detail-value"><a href="tel:${r.phone}">${r.phone||'—'}</a></div></div>
-      <div class="detail-row"><div class="detail-label">Email</div><div class="detail-value">${r.email ? `<a href="mailto:${r.email}">${r.email}</a>` : '—'}</div></div>
+      <div class="detail-row"><div class="detail-label">Email</div><div class="detail-value">${r.email ? '<a href="mailto:'+r.email+'">'+r.email+'</a>' : '—'}</div></div>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
       <div class="detail-row"><div class="detail-label">Service</div><div class="detail-value">${r.service||'—'}</div></div>
@@ -584,7 +416,6 @@ function openModal(id) {
     <button class="save-btn" id="save-btn" onclick="saveChanges()">Save Changes</button>
     <div class="saved-msg" id="saved-msg">✓ Saved</div>
   `;
-
   document.getElementById('modal').classList.add('open');
 }
 
@@ -602,30 +433,16 @@ async function saveChanges() {
   const btn = document.getElementById('save-btn');
   btn.disabled = true;
   btn.textContent = 'Saving...';
-
   const status = document.getElementById('modal-status').value;
   const notes = document.getElementById('modal-notes').value;
-
-  const { error } = await sb
-    .from('ssp_contact_submissions')
-    .update({ status, notes })
-    .eq('id', currentId);
-
+  const { error } = await sb.from('ssp_contact_submissions').update({ status, notes }).eq('id', currentId);
   if (!error) {
     const idx = allSubmissions.findIndex(x => x.id === currentId);
-    if (idx > -1) {
-      allSubmissions[idx].status = status;
-      allSubmissions[idx].notes = notes;
-    }
-    renderStats();
-    renderRecent();
-    renderContacts();
+    if (idx > -1) { allSubmissions[idx].status = status; allSubmissions[idx].notes = notes; }
+    renderStats(); renderRecent(); renderContacts();
     document.getElementById('saved-msg').style.display = 'block';
     setTimeout(() => { document.getElementById('saved-msg').style.display = 'none'; }, 2000);
-  } else {
-    alert('Error saving: ' + error.message);
-  }
-
+  } else { alert('Error saving: ' + error.message); }
   btn.disabled = false;
   btn.textContent = 'Save Changes';
 }
@@ -635,23 +452,18 @@ function openLightbox(url) {
   document.getElementById('lightbox-img').src = url;
   document.getElementById('lightbox').classList.add('open');
 }
-
 function closeLightbox() {
   document.getElementById('lightbox').classList.remove('open');
 }
-
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') { closeModal(); closeLightbox(); }
 });
 
 // ---- Photo Manager ----
-let currentPhotoSection = 'homepage';
-let allPhotos = [];
-
-function setPhotoSection(section) {
+function setPhotoSection(section, btn) {
   currentPhotoSection = section;
   document.querySelectorAll('.section-toggle button').forEach(b => b.classList.remove('active'));
-  event.target.classList.add('active');
+  btn.classList.add('active');
   document.getElementById('upload-section-label').textContent = section === 'homepage' ? 'Homepage' : 'Gallery';
   renderPhotos();
 }
@@ -662,27 +474,26 @@ async function loadPhotos() {
     .select('*')
     .order('sort_order', { ascending: true })
     .order('created_at', { ascending: false });
-  if (!error) allPhotos = data || [];
+  if (error) { console.error('loadPhotos error:', error); return; }
+  allPhotos = data || [];
   renderPhotos();
 }
 
 function renderPhotos() {
   const filtered = allPhotos.filter(p => p.section === currentPhotoSection);
   document.getElementById('photos-count').textContent = filtered.length + ' ' + (currentPhotoSection === 'homepage' ? 'Homepage' : 'Gallery') + ' Photos';
-  
   const grid = document.getElementById('photo-grid');
   if (filtered.length === 0) {
     grid.innerHTML = '<p style="color:var(--g400);font-size:.85rem;">No photos in this section yet. Upload some above.</p>';
     return;
   }
-  
   grid.innerHTML = filtered.map(p => `
     <div class="photo-card">
       <img src="${p.url}" loading="lazy" onclick="openLightbox('${p.url}')">
       <span class="photo-card-badge ${p.section}">${p.section}</span>
       <div class="photo-card-overlay">
-        <button class="photo-action move" onclick="movePhoto('${p.id}','${p.section === 'homepage' ? 'gallery' : 'homepage'}')">${p.section === 'homepage' ? 'To Gallery' : 'To Home'}</button>
-        <button class="photo-action delete" onclick="deletePhoto('${p.id}','${p.url}')">Delete</button>
+        <button class="photo-action move" onclick="event.stopPropagation();movePhoto('${p.id}','${p.section === 'homepage' ? 'gallery' : 'homepage'}')">${p.section === 'homepage' ? 'To Gallery' : 'To Home'}</button>
+        <button class="photo-action delete" onclick="event.stopPropagation();deletePhoto('${p.id}','${p.url}')">Delete</button>
       </div>
     </div>
   `).join('');
@@ -691,36 +502,33 @@ function renderPhotos() {
 document.getElementById('photo-input').addEventListener('change', async (e) => {
   const files = e.target.files;
   if (!files.length) return;
-  
   const indicator = document.getElementById('uploading');
   indicator.style.display = 'block';
+  indicator.style.background = '#fef3c7';
+  indicator.style.color = '#92400e';
   indicator.textContent = 'Uploading ' + files.length + ' photo(s)...';
-  
+
   for (const file of files) {
     indicator.textContent = 'Uploading ' + file.name + ' (' + Math.round(file.size/1024) + 'KB)...';
-    
     try {
       const ext = file.name.split('.').pop().toLowerCase();
       const safeName = Date.now() + '-' + Math.random().toString(36).slice(2) + '.' + (ext === 'heic' ? 'jpg' : ext);
-      
-      // Step 1: Upload to storage
+
       const { data: uploadData, error: uploadError } = await sb.storage.from('ssp-photos').upload(safeName, file, {
         cacheControl: '3600',
         upsert: false,
         contentType: file.type || 'image/jpeg'
       });
-      
       if (uploadError) {
         indicator.textContent = 'STORAGE ERROR: ' + uploadError.message;
         indicator.style.background = '#fde8e8';
         indicator.style.color = '#991b1b';
+        console.error('Storage upload error:', uploadError);
         await new Promise(r => setTimeout(r, 3000));
         continue;
       }
-      
-      // Step 2: Get public URL
+
       const { data: urlData } = sb.storage.from('ssp-photos').getPublicUrl(uploadData.path);
-      
       if (!urlData || !urlData.publicUrl) {
         indicator.textContent = 'URL ERROR: Could not get public URL';
         indicator.style.background = '#fde8e8';
@@ -728,40 +536,38 @@ document.getElementById('photo-input').addEventListener('change', async (e) => {
         await new Promise(r => setTimeout(r, 3000));
         continue;
       }
-      
-      // Step 3: Insert record
+
       const { error: dbError } = await sb.from('ssp_photos').insert([{
         url: urlData.publicUrl,
         section: currentPhotoSection,
+        caption: file.name.replace(/\.[^.]+$/, '').replace(/[-_]/g, ' '),
         sort_order: allPhotos.filter(p => p.section === currentPhotoSection).length
       }]);
-      
       if (dbError) {
         indicator.textContent = 'DB ERROR: ' + dbError.message;
         indicator.style.background = '#fde8e8';
         indicator.style.color = '#991b1b';
+        console.error('DB insert error:', dbError);
         await new Promise(r => setTimeout(r, 3000));
         continue;
       }
-      
-      indicator.textContent = file.name + ' uploaded successfully!';
+
+      indicator.textContent = file.name + ' uploaded!';
       indicator.style.background = '#d1fae5';
       indicator.style.color = '#065f46';
-      
     } catch (err) {
       indicator.textContent = 'ERROR: ' + err.message;
       indicator.style.background = '#fde8e8';
       indicator.style.color = '#991b1b';
+      console.error('Upload catch:', err);
       await new Promise(r => setTimeout(r, 3000));
     }
   }
-  
   setTimeout(() => {
     indicator.style.display = 'none';
     indicator.style.background = '#fef3c7';
     indicator.style.color = '#92400e';
   }, 2000);
-  
   e.target.value = '';
   await loadPhotos();
 });
@@ -773,21 +579,14 @@ async function movePhoto(id, newSection) {
 
 async function deletePhoto(id, url) {
   if (!confirm('Delete this photo?')) return;
-  
-  // Delete from storage
   const storagePath = url.split('/ssp-photos/')[1];
-  if (storagePath) await sb.storage.from('ssp-photos').remove([storagePath]);
-  
-  // Delete from table
+  if (storagePath) {
+    const decoded = decodeURIComponent(storagePath);
+    await sb.storage.from('ssp-photos').remove([decoded]);
+  }
   await sb.from('ssp_photos').delete().eq('id', id);
   await loadPhotos();
 }
-
-// Load photos when Photos tab is clicked
-document.querySelector('[data-tab="photos"]').addEventListener('click', () => {
-  if (allPhotos.length === 0) loadPhotos();
-});
-
 </script>
 </body>
 </html>

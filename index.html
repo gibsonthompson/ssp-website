@@ -14,7 +14,6 @@
 <a href="areas.html">Areas Served</a>
 <a href="contact.html">Contact</a>
 <a href="contact.html" class="btn btn-orange">Get a Quote</a>
-
 </nav></div></header>
 <section class="hero"><div class="hero-bg" style="background-image:url('https://images.pexels.com/photos/5362681/pexels-photo-5362681.jpeg?auto=compress&cs=tinysrgb&w=1600')"></div><div class="wrap">
 <h1>Professional <span>Abrasive Blasting</span> &amp; Surface Preparation</h1>
@@ -33,26 +32,23 @@
 <a href="services/heavy-equipment-cleaning.html" class="svc-card reveal"><img src="https://images.pexels.com/photos/1216589/pexels-photo-1216589.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Heavy equipment cleaning" loading="lazy"><div class="svc-card-body"><h3>Heavy Equipment Cleaning</h3><p>Restore construction and agricultural equipment.</p><span class="link">Learn More &rarr;</span></div></a>
 </div></div></section>
 
-
 <section class="section bg-light">
   <div class="wrap">
     <div class="section-head centered reveal"><div class="label">Our Work</div><h2>See Us in Action</h2><p>Real photos from real job sites. Mobile abrasive blasting across Georgia.</p></div>
-    <div id="homepage-photos" style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;" class="reveal">
-      <div style="border-radius:4px;overflow:hidden;aspect-ratio:4/3;"><img src="images/ssp-work-5.jpg" alt="Crouching blasting" loading="lazy" style="width:100%;height:100%;object-fit:cover;"></div>
-      <div style="border-radius:4px;overflow:hidden;aspect-ratio:4/3;"><img src="images/ssp-work-3.jpg" alt="Finished barrel" loading="lazy" style="width:100%;height:100%;object-fit:cover;"></div>
-      <div style="border-radius:4px;overflow:hidden;aspect-ratio:4/3;"><img src="images/ssp-work-4.jpg" alt="Standing blasting" loading="lazy" style="width:100%;height:100%;object-fit:cover;"></div>
+    <div id="homepage-photos" class="reveal" style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;min-height:200px;">
+      <p style="grid-column:1/-1;text-align:center;color:#999;padding:40px 0;">Loading photos...</p>
     </div>
     <script>
     (async()=>{
       try{
         const sb=window.supabase.createClient('https://szdrpdjyordvqtkuuazh.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN6ZHJwZGp5b3JkdnF0a3V1YXpoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY4MDAxMzgsImV4cCI6MjA4MjM3NjEzOH0.7rHx3HXaqe1h7q3y79nMwuXbOR9CcmWrY3WKXFjk8yM');
-        const{data}=await sb.from('ssp_photos').select('*').eq('section','homepage').order('sort_order').order('created_at',{ascending:false});
-        if(data&&data.length>0){
-          const grid=document.getElementById('homepage-photos');
-          const html=data.map(p=>'<div style="border-radius:4px;overflow:hidden;aspect-ratio:4/3;"><img src="'+p.url+'" alt="'+(p.caption||'SSP work')+'" loading="lazy" style="width:100%;height:100%;object-fit:cover;" onerror="this.parentElement.style.display='none'"></div>').join('');
-          grid.innerHTML=html;
-        }
-      }catch(e){}
+        const{data,error}=await sb.from('ssp_photos').select('*').eq('section','homepage').order('sort_order').order('created_at',{ascending:false});
+        console.log('Homepage photos query:', {data, error});
+        const grid=document.getElementById('homepage-photos');
+        if(error){grid.innerHTML='<p style="grid-column:1/-1;text-align:center;color:#999;padding:40px;">Error loading photos</p>';return;}
+        if(!data||data.length===0){grid.innerHTML='<p style="grid-column:1/-1;text-align:center;color:#999;padding:40px;">No photos uploaded yet. Add some from the <a href="admin.html">admin panel</a>.</p>';return;}
+        grid.innerHTML=data.map(p=>'<div style="border-radius:4px;overflow:hidden;aspect-ratio:4/3;"><img src="'+p.url+'" alt="'+(p.caption||'SSP work')+'" loading="lazy" style="width:100%;height:100%;object-fit:cover;" onerror="this.parentElement.style.display=\'none\'"></div>').join('');
+      }catch(e){console.error('Homepage photos error:',e);}
     })();
     </script>
     <div style="text-align:center;margin-top:20px;"><a href="gallery.html" class="btn btn-dark">View Full Gallery</a></div>
