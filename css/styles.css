@@ -267,6 +267,13 @@ p { margin-bottom: 1rem; }
 .content ul li::before { content: ''; position: absolute; left: 0; top: 12px; width: 7px; height: 2px; background: var(--orange); }
 .content ul li strong { color: var(--gray-800); }
 
+/* Content Narrow */
+.content-narrow { max-width: 780px; }
+
+/* Chip Links */
+a.chip { color: var(--gray-800); transition: .2s; }
+a.chip:hover { background: var(--orange); color: #fff; }
+
 /* Sidebar */
 .sidebar-box { background: var(--gray-100); border-radius: 4px; padding: 22px; margin-bottom: 16px; }
 .sidebar-box h4 { font-size: .75rem; letter-spacing: .12em; color: var(--orange); border-bottom: 2px solid var(--gray-200); padding-bottom: 8px; margin-bottom: 12px; }
