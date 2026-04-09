@@ -351,3 +351,6 @@ a.chip:hover { background: var(--orange); color: #fff; }
 /* Reveal */
 .reveal { opacity: 0; transform: translateY(16px); transition: opacity .5s, transform .5s; }
 .reveal.visible { opacity: 1; transform: translateY(0); }
+
+a.ind-tag { text-decoration: none; cursor: pointer; transition: background .2s, color .2s; }
+a.ind-tag:hover { background: var(--orange); color: #fff; border-color: var(--orange); }
