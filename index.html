@@ -15,7 +15,7 @@
 <a href="contact.html">Contact</a>
 <a href="contact.html" class="btn btn-orange">Get a Quote</a>
 </nav></div></header>
-<section class="hero"><div class="hero-bg" style="background-image:url('https://images.pexels.com/photos/5362681/pexels-photo-5362681.jpeg?auto=compress&cs=tinysrgb&w=1600')"></div><div class="wrap">
+<section class="hero"><div class="hero-bg" style="background-image:url('images/ssp-hero.jpg')"></div><div class="wrap">
 <h1>Professional <span>Abrasive Blasting</span> &amp; Surface Preparation</h1>
 <p>Industrial-grade mobile blasting for commercial, industrial, and automotive applications. We bring our equipment to your job site anywhere in Georgia and the Southeast.</p>
 <div class="hero-actions"><a href="contact.html" class="btn btn-orange">Get a Free Quote</a><a href="tel:7709900859" class="btn btn-outline">Call (770) 990-0859</a></div>
@@ -24,12 +24,12 @@
 <section class="section bg-white"><div class="wrap">
 <div class="section-head centered reveal"><div class="label">What We Do</div><h2>Our Surface Preparation Services</h2><p>From rust removal on structural steel to stripping coatings off heavy equipment — we handle it all.</p></div>
 <div class="services-grid">
-<a href="services/mobile-abrasive-blasting.html" class="svc-card reveal"><img src="https://images.pexels.com/photos/5362681/pexels-photo-5362681.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Mobile abrasive blasting" loading="lazy"><div class="svc-card-body"><h3>Mobile Abrasive Blasting</h3><p>On-site blasting with our DB500 system. We come to you.</p><span class="link">Learn More &rarr;</span></div></a>
-<a href="services/rust-removal.html" class="svc-card reveal"><img src="https://images.pexels.com/photos/27901403/pexels-photo-27901403.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Rust removal" loading="lazy"><div class="svc-card-body"><h3>Rust Removal</h3><p>Complete rust elimination from steel, equipment, and metal.</p><span class="link">Learn More &rarr;</span></div></a>
-<a href="services/paint-coating-removal.html" class="svc-card reveal"><img src="https://images.pexels.com/photos/73833/pexels-photo-73833.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Paint removal" loading="lazy"><div class="svc-card-body"><h3>Paint &amp; Coating Removal</h3><p>Strip paint, powder coating, epoxy, and protective coatings.</p><span class="link">Learn More &rarr;</span></div></a>
-<a href="services/concrete-surface-preparation.html" class="svc-card reveal"><img src="https://images.pexels.com/photos/2219024/pexels-photo-2219024.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Concrete surface prep" loading="lazy"><div class="svc-card-body"><h3>Concrete Surface Prep</h3><p>Remove contaminants and profile concrete for coatings.</p><span class="link">Learn More &rarr;</span></div></a>
-<a href="services/striping-removal.html" class="svc-card reveal"><img src="https://images.pexels.com/photos/1004409/pexels-photo-1004409.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Striping removal" loading="lazy"><div class="svc-card-body"><h3>Striping Removal</h3><p>Remove old parking lot markings for clean re-striping.</p><span class="link">Learn More &rarr;</span></div></a>
-<a href="services/heavy-equipment-cleaning.html" class="svc-card reveal"><img src="https://images.pexels.com/photos/1216589/pexels-photo-1216589.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Heavy equipment cleaning" loading="lazy"><div class="svc-card-body"><h3>Heavy Equipment Cleaning</h3><p>Restore construction and agricultural equipment.</p><span class="link">Learn More &rarr;</span></div></a>
+<a href="services/mobile-abrasive-blasting.html" class="svc-card reveal"><img src="images/svc-mobile-blasting.jpg" alt="Mobile abrasive blasting" loading="lazy"><div class="svc-card-body"><h3>Mobile Abrasive Blasting</h3><p>On-site blasting with our DB500 system. We come to you.</p><span class="link">Learn More &rarr;</span></div></a>
+<a href="services/rust-removal.html" class="svc-card reveal"><img src="images/svc-rust-removal.jpg" alt="Rust removal" loading="lazy"><div class="svc-card-body"><h3>Rust Removal</h3><p>Complete rust elimination from steel, equipment, and metal.</p><span class="link">Learn More &rarr;</span></div></a>
+<a href="services/paint-coating-removal.html" class="svc-card reveal"><img src="images/svc-paint-removal.jpg" alt="Paint and coating removal" loading="lazy"><div class="svc-card-body"><h3>Paint &amp; Coating Removal</h3><p>Strip paint, powder coating, epoxy, and protective coatings.</p><span class="link">Learn More &rarr;</span></div></a>
+<a href="services/concrete-surface-preparation.html" class="svc-card reveal"><img src="images/svc-concrete-prep.jpg" alt="Concrete surface prep" loading="lazy"><div class="svc-card-body"><h3>Concrete Surface Prep</h3><p>Remove contaminants and profile concrete for coatings.</p><span class="link">Learn More &rarr;</span></div></a>
+<a href="services/striping-removal.html" class="svc-card reveal"><img src="images/svc-striping-removal.jpg" alt="Striping removal" loading="lazy"><div class="svc-card-body"><h3>Striping Removal</h3><p>Remove old parking lot markings for clean re-striping.</p><span class="link">Learn More &rarr;</span></div></a>
+<a href="services/heavy-equipment-cleaning.html" class="svc-card reveal"><img src="images/svc-equipment-cleaning.jpg" alt="Heavy equipment cleaning" loading="lazy"><div class="svc-card-body"><h3>Heavy Equipment Cleaning</h3><p>Restore construction and agricultural equipment.</p><span class="link">Learn More &rarr;</span></div></a>
 </div></div></section>
 
 <section class="section bg-light">
@@ -38,6 +38,11 @@
     <div id="homepage-photos" class="reveal" style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;min-height:200px;">
       <p style="grid-column:1/-1;text-align:center;color:#999;padding:40px 0;">Loading photos...</p>
     </div>
+    <style>
+      @media(max-width:600px){
+        #homepage-photos{grid-template-columns:1fr !important;}
+      }
+    </style>
     <script>
     (async()=>{
       try{
@@ -79,17 +84,39 @@
 
 <section class="section bg-light"><div class="wrap">
 <div class="section-head centered reveal"><div class="label">Industries</div><h2>Industries We Serve</h2></div>
-<div class="industries-list" style="background:var(--dark);padding:24px;border-radius:4px;">
-<span class="ind-tag">Construction</span><span class="ind-tag">Equipment Rental</span><span class="ind-tag">Manufacturing</span><span class="ind-tag">Property Management</span><span class="ind-tag">Industrial Facilities</span><span class="ind-tag">Commercial Buildings</span><span class="ind-tag">Agriculture</span><span class="ind-tag">Transportation</span><span class="ind-tag">Automotive</span><span class="ind-tag">Marine</span>
+<div class="area-chips reveal" style="justify-content:center;">
+<a href="industries/manufacturing.html" class="chip">Manufacturing</a>
+<a href="industries/construction.html" class="chip">Construction</a>
+<a href="industries/warehousing.html" class="chip">Warehousing &amp; Distribution</a>
+<a href="industries/property-management.html" class="chip">Property Management</a>
+<a href="industries/agriculture.html" class="chip">Agriculture</a>
+<a href="industries/marine.html" class="chip">Marine &amp; Lakefront</a>
+<a href="industries/automotive.html" class="chip">Automotive &amp; Fleet</a>
+<a href="industries/historic-renovation.html" class="chip">Historic Renovation</a>
 </div></div></section>
 
 <section class="section bg-white"><div class="wrap">
 <div class="section-head centered reveal"><div class="label">Service Area</div><h2>Based in Hall County, Serving the Southeast</h2></div>
 <div class="area-chips reveal" style="justify-content:center;">
-<span class="chip">Hall County</span><span class="chip">Gainesville</span><span class="chip">Flowery Branch</span><span class="chip">Oakwood</span><span class="chip">Buford</span><span class="chip">Cumming</span><span class="chip">Dawsonville</span><span class="chip">Braselton</span><span class="chip">Jefferson</span><span class="chip">Athens</span><span class="chip">Metro Atlanta</span><span class="chip">All of Georgia</span>
+<a href="areas/gainesville-ga.html" class="chip">Gainesville</a>
+<a href="areas/flowery-branch-ga.html" class="chip">Flowery Branch</a>
+<a href="areas/oakwood-ga.html" class="chip">Oakwood</a>
+<a href="areas/buford-ga.html" class="chip">Buford</a>
+<a href="areas/cumming-ga.html" class="chip">Cumming</a>
+<a href="areas/dawsonville-ga.html" class="chip">Dawsonville</a>
+<a href="areas/dahlonega-ga.html" class="chip">Dahlonega</a>
+<a href="areas/braselton-ga.html" class="chip">Braselton</a>
+<a href="areas/jefferson-ga.html" class="chip">Jefferson</a>
+<a href="areas/athens-ga.html" class="chip">Athens</a>
+<a href="areas/lawrenceville-ga.html" class="chip">Lawrenceville</a>
+<a href="areas/suwanee-ga.html" class="chip">Suwanee</a>
+<a href="areas/alpharetta-ga.html" class="chip">Alpharetta</a>
+<a href="areas/marietta-ga.html" class="chip">Marietta</a>
+<a href="areas/atlanta-ga.html" class="chip">Atlanta</a>
+<span class="chip">All of Georgia</span>
 </div></div></section>
 
-<section class="cta-photo"><div class="cta-photo-bg" style="background-image:url('https://images.pexels.com/photos/5362681/pexels-photo-5362681.jpeg?auto=compress&cs=tinysrgb&w=1600')"></div><div class="wrap"><h2>Tell Us About Your Project</h2><p>Send photos for a same-day estimate. No obligation.</p><a href="contact.html" class="btn btn-orange">Request a Quote</a></div></section>
+<section class="cta-photo"><div class="cta-photo-bg" style="background-image:url('images/ssp-hero.jpg')"></div><div class="wrap"><h2>Tell Us About Your Project</h2><p>Send photos for a same-day estimate. No obligation.</p><a href="contact.html" class="btn btn-orange">Request a Quote</a></div></section>
 <footer class="footer"><div class="wrap">
 <div class="footer-grid">
 <div class="footer-brand"><img src="images/ssp-logo.png" alt="SSP" height="45"><p>Professional mobile abrasive blasting and surface preparation. Based in Hall County, Georgia.</p></div>
