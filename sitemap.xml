@@ -1,51 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <!-- Core Pages -->
-  <url><loc>https://stricklandsurfacepreparation.com/</loc><priority>1.0</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://stricklandsurfacepreparation.com/services</loc><priority>0.9</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://stricklandsurfacepreparation.com/about</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://stricklandsurfacepreparation.com/gallery</loc><priority>0.6</priority><changefreq>weekly</changefreq></url>
-  <url><loc>https://stricklandsurfacepreparation.com/areas</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://stricklandsurfacepreparation.com/contact</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://www.stricklandsurfacepreparation.com/</loc><priority>1.0</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://www.stricklandsurfacepreparation.com/services</loc><priority>0.9</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://www.stricklandsurfacepreparation.com/about</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://www.stricklandsurfacepreparation.com/gallery</loc><priority>0.6</priority><changefreq>weekly</changefreq></url>
+  <url><loc>https://www.stricklandsurfacepreparation.com/areas</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://www.stricklandsurfacepreparation.com/contact</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
 
   <!-- Service Pages -->
-  <url><loc>https://stricklandsurfacepreparation.com/services/mobile-abrasive-blasting</loc><priority>0.9</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://stricklandsurfacepreparation.com/services/rust-removal</loc><priority>0.9</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://stricklandsurfacepreparation.com/services/paint-coating-removal</loc><priority>0.9</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://stricklandsurfacepreparation.com/services/concrete-surface-preparation</loc><priority>0.9</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://stricklandsurfacepreparation.com/services/striping-removal</loc><priority>0.9</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://stricklandsurfacepreparation.com/services/heavy-equipment-cleaning</loc><priority>0.9</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://www.stricklandsurfacepreparation.com/services/mobile-abrasive-blasting</loc><priority>0.9</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://www.stricklandsurfacepreparation.com/services/rust-removal</loc><priority>0.9</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://www.stricklandsurfacepreparation.com/services/paint-coating-removal</loc><priority>0.9</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://www.stricklandsurfacepreparation.com/services/concrete-surface-preparation</loc><priority>0.9</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://www.stricklandsurfacepreparation.com/services/striping-removal</loc><priority>0.9</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://www.stricklandsurfacepreparation.com/services/heavy-equipment-cleaning</loc><priority>0.9</priority><changefreq>monthly</changefreq></url>
 
   <!-- Location Pages — Home Base (Hall County) -->
-  <url><loc>https://stricklandsurfacepreparation.com/areas/gainesville-ga</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://stricklandsurfacepreparation.com/areas/flowery-branch-ga</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://stricklandsurfacepreparation.com/areas/oakwood-ga</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://www.stricklandsurfacepreparation.com/areas/gainesville-ga</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://www.stricklandsurfacepreparation.com/areas/flowery-branch-ga</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://www.stricklandsurfacepreparation.com/areas/oakwood-ga</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
 
   <!-- Location Pages — North Georgia & Extended -->
-  <url><loc>https://stricklandsurfacepreparation.com/areas/buford-ga</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://stricklandsurfacepreparation.com/areas/cumming-ga</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://stricklandsurfacepreparation.com/areas/dawsonville-ga</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://stricklandsurfacepreparation.com/areas/dahlonega-ga</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://stricklandsurfacepreparation.com/areas/braselton-ga</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://stricklandsurfacepreparation.com/areas/jefferson-ga</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://stricklandsurfacepreparation.com/areas/winder-ga</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://stricklandsurfacepreparation.com/areas/commerce-ga</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://stricklandsurfacepreparation.com/areas/athens-ga</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://www.stricklandsurfacepreparation.com/areas/buford-ga</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://www.stricklandsurfacepreparation.com/areas/cumming-ga</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://www.stricklandsurfacepreparation.com/areas/dawsonville-ga</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://www.stricklandsurfacepreparation.com/areas/dahlonega-ga</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://www.stricklandsurfacepreparation.com/areas/braselton-ga</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://www.stricklandsurfacepreparation.com/areas/jefferson-ga</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://www.stricklandsurfacepreparation.com/areas/winder-ga</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://www.stricklandsurfacepreparation.com/areas/commerce-ga</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://www.stricklandsurfacepreparation.com/areas/athens-ga</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
 
   <!-- Location Pages — Metro Atlanta -->
-  <url><loc>https://stricklandsurfacepreparation.com/areas/lawrenceville-ga</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://stricklandsurfacepreparation.com/areas/suwanee-ga</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://stricklandsurfacepreparation.com/areas/alpharetta-ga</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://stricklandsurfacepreparation.com/areas/marietta-ga</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://stricklandsurfacepreparation.com/areas/atlanta-ga</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://www.stricklandsurfacepreparation.com/areas/lawrenceville-ga</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://www.stricklandsurfacepreparation.com/areas/suwanee-ga</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://www.stricklandsurfacepreparation.com/areas/alpharetta-ga</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://www.stricklandsurfacepreparation.com/areas/marietta-ga</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://www.stricklandsurfacepreparation.com/areas/atlanta-ga</loc><priority>0.7</priority><changefreq>monthly</changefreq></url>
 
   <!-- Industry Pages -->
-  <url><loc>https://stricklandsurfacepreparation.com/industries/manufacturing</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://stricklandsurfacepreparation.com/industries/construction</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://stricklandsurfacepreparation.com/industries/warehousing</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://stricklandsurfacepreparation.com/industries/property-management</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://stricklandsurfacepreparation.com/industries/agriculture</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://stricklandsurfacepreparation.com/industries/marine</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://stricklandsurfacepreparation.com/industries/automotive</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
-  <url><loc>https://stricklandsurfacepreparation.com/industries/historic-renovation</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://www.stricklandsurfacepreparation.com/industries/manufacturing</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://www.stricklandsurfacepreparation.com/industries/construction</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://www.stricklandsurfacepreparation.com/industries/warehousing</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://www.stricklandsurfacepreparation.com/industries/property-management</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://www.stricklandsurfacepreparation.com/industries/agriculture</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://www.stricklandsurfacepreparation.com/industries/marine</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://www.stricklandsurfacepreparation.com/industries/automotive</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
+  <url><loc>https://www.stricklandsurfacepreparation.com/industries/historic-renovation</loc><priority>0.8</priority><changefreq>monthly</changefreq></url>
 </urlset>
